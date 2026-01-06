@@ -10,6 +10,26 @@ const imagePreview = ref(null)
 const fileInput = ref(null)
 const errors = ref({})
 const formError = ref('')
+const fileError = ref('')
+
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+
+function validateFile (file) {
+  if (!file) return null
+
+  // Check file type
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return 'Please upload a valid image (JPG, PNG, GIF, or WebP)'
+  }
+
+  // Check file size
+  if (file.size > MAX_FILE_SIZE) {
+    return `File size must be less than 5MB (current: ${(file.size / 1024 / 1024).toFixed(2)}MB)`
+  }
+
+  return null
+}
 
 function clearTitleError () {
   if (title.value.trim()) {
@@ -25,7 +45,21 @@ function clearBodyError () {
 
 function handleFileSelect (event) {
   const file = event.target.files?.[0]
+  fileError.value = ''
+
   if (file) {
+    // Validate file
+    const validationError = validateFile(file)
+    if (validationError) {
+      fileError.value = validationError
+      selectedFile.value = null
+      imagePreview.value = null
+      if (fileInput.value) {
+        fileInput.value.value = ''
+      }
+      return
+    }
+
     selectedFile.value = file
     
     // Create preview
@@ -40,6 +74,7 @@ function handleFileSelect (event) {
 function clearImage () {
   selectedFile.value = null
   imagePreview.value = null
+  fileError.value = ''
   if (fileInput.value) {
     fileInput.value.value = ''
   }
@@ -112,7 +147,7 @@ async function submit () {
           <p class="mt-2 text-sm text-gray-600">
             <span class="font-semibold text-blue-600">Click to upload</span> or drag and drop
           </p>
-          <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+          <p class="text-xs text-gray-500">PNG, JPG, GIF, WebP up to 5MB</p>
         </div>
         <input
           ref="fileInput"
@@ -122,6 +157,10 @@ async function submit () {
           @change="handleFileSelect"
           :disabled="postsStore.loading">
       </label>
+      
+      <div v-if="fileError" class="mt-3 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded-lg text-sm">
+        {{ fileError }}
+      </div>
       
       <div v-if="imagePreview" class="mt-4 relative">
         <img
