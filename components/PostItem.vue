@@ -19,7 +19,7 @@ const isPostFavLoading = ref(false)
 const followError = ref(null)
 const postFavError = ref(null)
 
-async function toggleUserFavorite () {
+async function toggleUserFavorite() {
   if (isFollowLoading.value) return
 
   isFollowLoading.value = true
@@ -39,7 +39,7 @@ async function toggleUserFavorite () {
   }
 }
 
-async function togglePostFavorite () {
+async function togglePostFavorite() {
   if (isPostFavLoading.value) return
 
   isPostFavLoading.value = true
@@ -69,16 +69,15 @@ async function togglePostFavorite () {
       <div>
         by <strong>{{ post.user.name }}</strong>
       </div>
-      <button 
-        v-if="!user.isGuest && !isOwnPost"
-        @click="toggleUserFavorite"
+      <button v-if="!user.isGuest && !isOwnPost" @click="toggleUserFavorite"
         class="font-medium text-sm px-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        :class="isUserFavorited ? 'bg-blue-600 text-white' : 'bg-blue-200'"
-        :disabled="isFollowLoading">
+        :class="isUserFavorited ? 'bg-blue-600 text-white' : 'bg-blue-200'" :disabled="isFollowLoading">
         <span v-if="isFollowLoading" class="flex items-center justify-center gap-1">
           <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
           </svg>
           <span>Following...</span>
         </span>
@@ -93,24 +92,22 @@ async function togglePostFavorite () {
     <p>
       {{ post.body }}
     </p>
-    <button 
-      v-if="!user.isGuest"
-      @click="togglePostFavorite"
+    <button v-if="!user.isGuest" @click="togglePostFavorite"
       class="flex items-center justify-center gap-2 p-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-      :class="isPostFavorited 
-        ? 'bg-red-500 text-white' 
-        : 'bg-red-200 text-red-500'"
-      :disabled="isPostFavLoading">
+      :class="isPostFavorited
+        ? 'bg-red-500 text-white'
+        : 'bg-red-200 text-red-500'" :disabled="isPostFavLoading">
       <span v-if="isPostFavLoading" class="flex items-center justify-center gap-2 font-bold">
         <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
         </svg>
         <span>Saving...</span>
       </span>
       <span v-else class="flex items-center justify-center gap-2 font-bold">
-        <HeartIcon
-          :class="isPostFavorited ? 'fill-current h-6 w-6' : 'h-6 w-6 stroke-current'"
+        <HeartIcon :class="isPostFavorited ? 'fill-current h-6 w-6' : 'h-6 w-6 stroke-current'"
           class="stroke-current" />
         <span>
           {{ isPostFavorited ? 'Remove from favorites' : 'Add to my favorites' }}

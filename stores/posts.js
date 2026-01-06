@@ -7,7 +7,7 @@ export const usePosts = defineStore('posts', () => {
 
   const error = ref(null)
 
-  async function fetchPosts () {
+  async function fetchPosts() {
     loading.value = true
     error.value = null
 
@@ -22,7 +22,7 @@ export const usePosts = defineStore('posts', () => {
     }
   }
 
-  async function createPost ({ title, body }) {
+  async function createPost({ title, body }) {
     error.value = null
 
     try {

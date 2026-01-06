@@ -21,12 +21,8 @@ if (!user.isGuest) {
 </script>
 
 <template>
-  <PostForm
-    v-if="!user.isGuest" />
+  <PostForm v-if="!user.isGuest" />
   <div class="grid gap-16">
-    <PostItem
-      v-for="post in postsStore.items"
-      :key="post.id"
-      v-bind="{ post }" />
+    <PostItem v-for="post in postsStore.items" :key="post.id" v-bind="{ post }" />
   </div>
 </template>

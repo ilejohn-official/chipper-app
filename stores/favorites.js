@@ -9,7 +9,7 @@ export const useFavorites = defineStore('favorites', () => {
 
   const error = ref(null)
 
-  async function fetchFavorites () {
+  async function fetchFavorites() {
     loading.value = true
     error.value = null
 
@@ -25,9 +25,9 @@ export const useFavorites = defineStore('favorites', () => {
     }
   }
 
-  async function favorite (userId) {
+  async function favorite(userId) {
     error.value = null
-    
+
     // Optimistic update
     if (!users.value.find(u => u.id === userId)) {
       users.value.push({ id: userId })
@@ -43,9 +43,9 @@ export const useFavorites = defineStore('favorites', () => {
     }
   }
 
-  async function unfavorite (userId) {
+  async function unfavorite(userId) {
     error.value = null
-    
+
     // Optimistic update
     const originalUsers = users.value
     users.value = users.value.filter(u => u.id !== userId)
@@ -60,9 +60,9 @@ export const useFavorites = defineStore('favorites', () => {
     }
   }
 
-  async function favoritePost (postId) {
+  async function favoritePost(postId) {
     error.value = null
-    
+
     // Optimistic update: add post ID to favorites
     if (!posts.value.find(p => p.id === postId)) {
       posts.value.push({ id: postId })
@@ -78,9 +78,9 @@ export const useFavorites = defineStore('favorites', () => {
     }
   }
 
-  async function unfavoritePost (postId) {
+  async function unfavoritePost(postId) {
     error.value = null
-    
+
     // Optimistic update
     const originalPosts = posts.value
     posts.value = posts.value.filter(p => p.id !== postId)
@@ -95,15 +95,15 @@ export const useFavorites = defineStore('favorites', () => {
     }
   }
 
-  function isUserFavorited (userId) {
+  function isUserFavorited(userId) {
     return users.value.some(u => u.id === userId)
   }
 
-  function isPostFavorited (postId) {
+  function isPostFavorited(postId) {
     return posts.value.some(p => p.id === postId)
   }
 
-  function reset () {
+  function reset() {
     users.value = []
     posts.value = []
     error.value = null
