@@ -60,8 +60,47 @@ export const useFavorites = defineStore('favorites', () => {
     }
   }
 
-  function isFavorited (userId) {
+  async function favoritePost (postId) {
+    error.value = null
+    
+    // Optimistic update: add post ID to favorites
+    if (!posts.value.find(p => p.id === postId)) {
+      posts.value.push({ id: postId })
+    }
+
+    try {
+      await $api.post(`/posts/${postId}/favorite`)
+    } catch (err) {
+      // Revert on error
+      posts.value = posts.value.filter(p => p.id !== postId)
+      error.value = err.message || 'Failed to favorite post'
+      throw err
+    }
+  }
+
+  async function unfavoritePost (postId) {
+    error.value = null
+    
+    // Optimistic update
+    const originalPosts = posts.value
+    posts.value = posts.value.filter(p => p.id !== postId)
+
+    try {
+      await $api.delete(`/posts/${postId}/favorite`)
+    } catch (err) {
+      // Revert on error
+      posts.value = originalPosts
+      error.value = err.message || 'Failed to unfavorite post'
+      throw err
+    }
+  }
+
+  function isUserFavorited (userId) {
     return users.value.some(u => u.id === userId)
+  }
+
+  function isPostFavorited (postId) {
+    return posts.value.some(p => p.id === postId)
   }
 
   function reset () {
@@ -78,7 +117,10 @@ export const useFavorites = defineStore('favorites', () => {
     fetchFavorites,
     favorite,
     unfavorite,
-    isFavorited,
+    favoritePost,
+    unfavoritePost,
+    isUserFavorited,
+    isPostFavorited,
     reset
   }
 })

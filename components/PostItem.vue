@@ -11,7 +11,7 @@ const props = defineProps({
   }
 })
 
-const isFavorited = computed(() => favoritesStore.isFavorited(props.post.user.id))
+const isFavorited = computed(() => favoritesStore.isUserFavorited(props.post.user.id))
 const isOwnPost = computed(() => user.data.id === props.post.user.id)
 const isLoading = ref(false)
 const error = ref(null)
