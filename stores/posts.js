@@ -58,7 +58,7 @@ export const usePosts = defineStore('posts', () => {
     }
   }
 
-  async function createPost ({ title, body, image }) {
+  async function createPost({ title, body, image }) {
     error.value = null
 
     try {

@@ -96,12 +96,8 @@ async function togglePostFavorite() {
     </p>
     <div v-if="hasImage" class="relative bg-gray-100 rounded-lg overflow-hidden">
       <div v-if="imageLoading" class="absolute inset-0 bg-gray-200 animate-pulse"></div>
-      <img
-        :src="post.image_url"
-        :alt="post.title"
-        class="w-full h-auto max-h-96 object-cover rounded-lg"
-        @load="imageLoading = false"
-        @error="imageLoading = false">
+      <img :src="post.image_url" :alt="post.title" class="w-full h-auto max-h-96 object-cover rounded-lg"
+        @load="imageLoading = false" @error="imageLoading = false">
     </div>
     <button v-if="!user.isGuest" @click="togglePostFavorite"
       class="flex items-center justify-center gap-2 p-4 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
