@@ -58,11 +58,24 @@ export const usePosts = defineStore('posts', () => {
     }
   }
 
-  async function createPost({ title, body }) {
+  async function createPost ({ title, body, image }) {
     error.value = null
 
     try {
-      const response = await $api.post('/posts', { title, body })
+      let payload
+
+      // If image is provided, use FormData for multipart upload
+      if (image) {
+        payload = new FormData()
+        payload.append('title', title)
+        payload.append('body', body)
+        payload.append('image', image)
+      } else {
+        // Otherwise send as JSON
+        payload = { title, body }
+      }
+
+      const response = await $api.post('/posts', payload)
       items.value.unshift(response.data)
 
       // Update newest post ID
