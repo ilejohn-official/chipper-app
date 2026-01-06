@@ -1,12 +1,29 @@
 <script setup>
 import { HeartIcon } from '@heroicons/vue/24/outline'
 
-defineProps({
+const favoritesStore = useFavorites()
+const user = useUser()
+
+const props = defineProps({
   post: {
     type: Object,
     required: true
   }
 })
+
+const isFavorited = computed(() => favoritesStore.isFavorited(props.post.user.id))
+
+async function toggleFavorite () {
+  try {
+    if (isFavorited.value) {
+      await favoritesStore.unfavorite(props.post.user.id)
+    } else {
+      await favoritesStore.favorite(props.post.user.id)
+    }
+  } catch (err) {
+    console.error('Failed to toggle favorite:', err)
+  }
+}
 </script>
 
 <template>
@@ -18,8 +35,12 @@ defineProps({
       <div>
         by <strong>{{ post.user.name }}</strong>
       </div>
-      <button class="font-medium bg-blue-200 text-sm px-2 rounded-full">
-        Follow
+      <button 
+        v-if="!user.isGuest"
+        @click="toggleFavorite"
+        class="font-medium text-sm px-2 rounded-full transition-colors"
+        :class="isFavorited ? 'bg-blue-600 text-white' : 'bg-blue-200'">
+        {{ isFavorited ? 'Unfollow' : 'Follow' }}
       </button>
     </div>
     <p>

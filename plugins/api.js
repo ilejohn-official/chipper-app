@@ -2,9 +2,10 @@ import { pickBy } from 'lodash-es'
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
+  const { getCookieParams } = useHelpers()
 
   function request (method, url, params, headers) {
-    const tokenCookie = useCookie('jwt')
+    const tokenCookie = useCookie('jwt', getCookieParams())
     const couponCookie = useCookie('coupon')
     const utmCookie = useCookie('utm')
 

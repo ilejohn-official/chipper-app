@@ -26,6 +26,17 @@ export const useUser = defineStore('user', () => {
     tokenCookie.value = payload.token
   }
 
+  async function loadFavorites () {
+    const favoritesStore = useFavorites()
+    try {
+      // Wait for next tick to ensure cookie reactivity is updated
+      await nextTick()
+      await favoritesStore.fetchFavorites()
+    } catch (err) {
+      console.error('Failed to load favorites:', err)
+    }
+  }
+
   function clear () {
     data.value = {}
     token.value = null
@@ -35,6 +46,7 @@ export const useUser = defineStore('user', () => {
   async function login ({ email, password }) {
     const payload = await $api.post('/login', { email, password })
     start(payload)
+    await loadFavorites()
   }
 
   async function register ({ name, email, password }) {
@@ -46,6 +58,7 @@ export const useUser = defineStore('user', () => {
     })
 
     start(payload)
+    await loadFavorites()
   }
 
   async function validate () {
@@ -55,6 +68,7 @@ export const useUser = defineStore('user', () => {
     try {
       const payload = await $api.get('/session')
       start(payload)
+      await loadFavorites()
     } catch (e) {
       clear()
     }
@@ -66,7 +80,7 @@ export const useUser = defineStore('user', () => {
     
     // Clear favorites on logout
     const favoritesStore = useFavorites()
-    favoritesStore.$reset()
+    favoritesStore.reset()
   }
 
   return {
@@ -78,7 +92,8 @@ export const useUser = defineStore('user', () => {
     login,
     register,
     validate,
-    logout
+    logout,
+    loadFavorites
   }
 })
 

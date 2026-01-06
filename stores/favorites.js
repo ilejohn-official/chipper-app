@@ -29,10 +29,9 @@ export const useFavorites = defineStore('favorites', () => {
     error.value = null
 
     try {
-      const response = await $api.post(`/users/${userId}/favorite`)
-      const user = response.data
+      await $api.post(`/users/${userId}/favorite`)
       if (!users.value.find(u => u.id === userId)) {
-        users.value.push(user)
+        users.value.push({ id: userId })
       }
     } catch (err) {
       error.value = err.message || 'Failed to favorite user'
@@ -56,6 +55,12 @@ export const useFavorites = defineStore('favorites', () => {
     return users.value.some(u => u.id === userId)
   }
 
+  function reset () {
+    users.value = []
+    posts.value = []
+    error.value = null
+  }
+
   return {
     users,
     posts,
@@ -64,6 +69,7 @@ export const useFavorites = defineStore('favorites', () => {
     fetchFavorites,
     favorite,
     unfavorite,
-    isFavorited
+    isFavorited,
+    reset
   }
 })
