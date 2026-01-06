@@ -9,6 +9,12 @@ export default defineNuxtPlugin(() => {
     const couponCookie = useCookie('coupon')
     const utmCookie = useCookie('utm')
 
+    // Detect if params is FormData (multipart upload)
+    const isFormData = params instanceof FormData
+    
+    // Only set Content-Type if not FormData (browser sets it automatically with boundary)
+    const contentType = isFormData ? null : 'application/json'
+
     return $fetch(url, {
       method,
       body: ['POST', 'PATCH', 'PUT'].includes(method) ? params : null,
@@ -17,7 +23,7 @@ export default defineNuxtPlugin(() => {
       headers: pickBy({
         ...headers,
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': contentType,
         Authorization: tokenCookie?.value ? `Bearer ${tokenCookie.value}` : null,
         'X-Coupon': couponCookie?.value,
         'X-UTM': JSON.stringify(toRaw(utmCookie?.value))
