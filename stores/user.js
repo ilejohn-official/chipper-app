@@ -63,6 +63,10 @@ export const useUser = defineStore('user', () => {
   async function logout () {
     await $api.post('/logout')
     clear()
+    
+    // Clear favorites on logout
+    const favoritesStore = useFavorites()
+    favoritesStore.$reset()
   }
 
   return {

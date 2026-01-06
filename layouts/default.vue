@@ -1,5 +1,19 @@
 <script setup>
 const user = useUser()
+const favoritesStore = useFavorites()
+
+watch(
+  () => user.isGuest,
+  async (isGuest) => {
+    if (!isGuest) {
+      try {
+        await favoritesStore.fetchFavorites()
+      } catch (err) {
+        console.error('Failed to load favorites:', err)
+      }
+    }
+  }
+)
 
 async function logout () {
   await user.logout()
