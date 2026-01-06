@@ -17,7 +17,7 @@ export const useUser = defineStore('user', () => {
 
   const name = computed(() => isGuest.value ? null : data.value.name)
 
-  async function start (payload) {
+  async function start(payload) {
     started.value = true
     data.value = payload.data
     token.value = payload.token
@@ -26,18 +26,29 @@ export const useUser = defineStore('user', () => {
     tokenCookie.value = payload.token
   }
 
-  function clear () {
+  async function loadFavorites() {
+    const favoritesStore = useFavorites()
+    try {
+      // Wait for next tick to ensure cookie reactivity is updated
+      await nextTick()
+      await favoritesStore.fetchFavorites()
+    } catch (err) {
+      console.error('Failed to load favorites:', err)
+    }
+  }
+
+  function clear() {
     data.value = {}
     token.value = null
     tokenCookie.value = null
   }
 
-  async function login ({ email, password }) {
+  async function login({ email, password }) {
     const payload = await $api.post('/login', { email, password })
     start(payload)
   }
 
-  async function register ({ name, email, password }) {
+  async function register({ name, email, password }) {
     const payload = await $api.post('/register', {
       name,
       email,
@@ -48,7 +59,7 @@ export const useUser = defineStore('user', () => {
     start(payload)
   }
 
-  async function validate () {
+  async function validate() {
     // Skip if the browser does not have a "jwt" cookie or the session has already started
     if (!tokenCookie.value || started.value) return
 
@@ -60,9 +71,13 @@ export const useUser = defineStore('user', () => {
     }
   }
 
-  async function logout () {
+  async function logout() {
     await $api.post('/logout')
     clear()
+
+    // Clear favorites on logout
+    const favoritesStore = useFavorites()
+    favoritesStore.reset()
   }
 
   return {

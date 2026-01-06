@@ -1,6 +1,10 @@
 <script setup>
 const user = useUser()
 
+onMounted(async () => {
+  await user.validate()
+})
+
 async function logout () {
   await user.logout()
   window.location.reload()
