@@ -8,6 +8,18 @@ const body = ref('')
 const errors = ref({})
 const formError = ref('')
 
+function clearTitleError () {
+  if (title.value.trim()) {
+    delete errors.value.title
+  }
+}
+
+function clearBodyError () {
+  if (body.value.trim()) {
+    delete errors.value.body
+  }
+}
+
 async function submit () {
   errors.value = {}
   formError.value = ''
@@ -48,6 +60,7 @@ async function submit () {
     <div>
       <input
         v-model="title"
+        @input="clearTitleError"
         placeholder="Post title"
         class="block w-full rounded-lg border border-gray-400 px-5 py-4 text-sm focus:border-blue-500 focus:outline-none md:text-base disabled:bg-gray-100"
         :class="{ 'border-red-500': errors.title }"
@@ -57,6 +70,7 @@ async function submit () {
     <div>
       <textarea
         v-model="body"
+        @input="clearBodyError"
         placeholder="What is happening?!"
         class="block w-full rounded-lg border border-gray-400 px-5 py-4 text-sm focus:border-blue-500 focus:outline-none md:text-base disabled:bg-gray-100"
         :class="{ 'border-red-500': errors.body }"
