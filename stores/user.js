@@ -46,7 +46,6 @@ export const useUser = defineStore('user', () => {
   async function login ({ email, password }) {
     const payload = await $api.post('/login', { email, password })
     start(payload)
-    await loadFavorites()
   }
 
   async function register ({ name, email, password }) {
@@ -58,7 +57,6 @@ export const useUser = defineStore('user', () => {
     })
 
     start(payload)
-    await loadFavorites()
   }
 
   async function validate () {
@@ -68,7 +66,6 @@ export const useUser = defineStore('user', () => {
     try {
       const payload = await $api.get('/session')
       start(payload)
-      await loadFavorites()
     } catch (e) {
       clear()
     }
@@ -92,8 +89,7 @@ export const useUser = defineStore('user', () => {
     login,
     register,
     validate,
-    logout,
-    loadFavorites
+    logout
   }
 })
 

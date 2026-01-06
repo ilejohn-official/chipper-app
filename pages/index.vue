@@ -5,8 +5,19 @@ definePageMeta({
 
 const user = useUser()
 const postsStore = usePosts()
+const favoritesStore = useFavorites()
 
 await postsStore.fetchPosts()
+
+// Lazy load favorites only for authenticated users
+if (!user.isGuest) {
+  try {
+    await nextTick()
+    await favoritesStore.fetchFavorites()
+  } catch (err) {
+    console.error('Failed to load favorites:', err)
+  }
+}
 </script>
 
 <template>
