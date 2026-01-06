@@ -7,8 +7,22 @@ export const usePosts = defineStore('posts', () => {
 
   const error = ref(null)
 
-  async function createPost ({ title, body }) {
+  async function fetchPosts () {
     loading.value = true
+    error.value = null
+
+    try {
+      const response = await $api.get('/posts')
+      items.value = response.data
+    } catch (err) {
+      error.value = err.message || 'Failed to fetch posts'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function createPost ({ title, body }) {
     error.value = null
 
     try {
@@ -18,8 +32,6 @@ export const usePosts = defineStore('posts', () => {
     } catch (err) {
       error.value = err.message || 'Failed to create post'
       throw err
-    } finally {
-      loading.value = false
     }
   }
 
@@ -27,6 +39,7 @@ export const usePosts = defineStore('posts', () => {
     items,
     loading,
     error,
+    fetchPosts,
     createPost
   }
 })

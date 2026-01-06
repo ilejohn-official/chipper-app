@@ -3,10 +3,10 @@ definePageMeta({
   middleware: ['validate-session']
 })
 
-const { $api } = useNuxtApp()
 const user = useUser()
+const postsStore = usePosts()
 
-const { data: posts } = await $api.get('posts')
+await postsStore.fetchPosts()
 </script>
 
 <template>
@@ -14,7 +14,7 @@ const { data: posts } = await $api.get('posts')
     v-if="!user.isGuest" />
   <div class="grid gap-16">
     <PostItem
-      v-for="post in posts"
+      v-for="post in postsStore.items"
       :key="post.id"
       v-bind="{ post }" />
   </div>
