@@ -27,13 +27,17 @@ export const useFavorites = defineStore('favorites', () => {
 
   async function favorite (userId) {
     error.value = null
+    
+    // Optimistic update
+    if (!users.value.find(u => u.id === userId)) {
+      users.value.push({ id: userId })
+    }
 
     try {
       await $api.post(`/users/${userId}/favorite`)
-      if (!users.value.find(u => u.id === userId)) {
-        users.value.push({ id: userId })
-      }
     } catch (err) {
+      // Revert on error
+      users.value = users.value.filter(u => u.id !== userId)
       error.value = err.message || 'Failed to favorite user'
       throw err
     }
@@ -41,11 +45,16 @@ export const useFavorites = defineStore('favorites', () => {
 
   async function unfavorite (userId) {
     error.value = null
+    
+    // Optimistic update
+    const originalUsers = users.value
+    users.value = users.value.filter(u => u.id !== userId)
 
     try {
       await $api.delete(`/users/${userId}/favorite`)
-      users.value = users.value.filter(u => u.id !== userId)
     } catch (err) {
+      // Revert on error
+      users.value = originalUsers
       error.value = err.message || 'Failed to unfavorite user'
       throw err
     }
