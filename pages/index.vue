@@ -27,9 +27,6 @@ usePolling(() => postsStore.fetchNewPosts(), 30000)
   <PostForm v-if="!user.isGuest" />
   <LoadNewPostsButton />
   <div class="grid gap-16">
-    <PostItem
-      v-for="post in postsStore.items"
-      :key="post.id"
-      v-bind="{ post }" />
+    <PostItem v-for="post in postsStore.items" :key="post.id" v-bind="{ post }" />
   </div>
 </template>
