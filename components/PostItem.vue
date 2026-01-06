@@ -12,6 +12,7 @@ const props = defineProps({
 })
 
 const isFavorited = computed(() => favoritesStore.isFavorited(props.post.user.id))
+const isOwnPost = computed(() => user.data.id === props.post.user.id)
 
 async function toggleFavorite () {
   try {
@@ -36,7 +37,7 @@ async function toggleFavorite () {
         by <strong>{{ post.user.name }}</strong>
       </div>
       <button 
-        v-if="!user.isGuest"
+        v-if="!user.isGuest && !isOwnPost"
         @click="toggleFavorite"
         class="font-medium text-sm px-2 rounded-full transition-colors"
         :class="isFavorited ? 'bg-blue-600 text-white' : 'bg-blue-200'">
